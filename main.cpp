@@ -37,14 +37,14 @@ sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "psych balls", sf::Style::
 // circle balls[][5];
 vector<circle> balls;
 int main(){
-    addBalls(500, 0.1, 1, 30, 100, WIDTH/2, HEIGHT/2);
+    addBalls(5, 0.1, 1, 30, 100, WIDTH/2, HEIGHT/2);
     while(window.isOpen()){
         getFPS();
         sf::Event event;
         processEvent(&event);
 
         for(int y = 0; y < balls.size(); y++){
-            if(y == balls.size()-1)
+            if(y == 0)
                 continue;
             // float rot = -atan2f32(balls[y].getMid().x - aim.x, balls[y].getMid().y - aim.y)*180/M_PIf32; //goes to a point
             float rot = -atan2f32(balls[y].getMid().x - sf::Mouse::getPosition(window).x, balls[y].getMid().y - sf::Mouse::getPosition(window).y)*180/M_PIf32; //goes to mouse
@@ -103,16 +103,18 @@ void addBalls(int amount, float wMin, float wMax, float sMin, float sMax, float 
     mapRange(sizes, sMin, sMax, amount);
     for(int i = 0; i < amount; i++){
         balls.push_back(circle(sizes[i], weights[i], WIDTH/2, HEIGHT/2));
+        cout << "ball[" << i <<"] size: " << balls[i].shape.getRadius()/2 << " weight: " << balls[i].weight << endl;
     } 
     free(weights);
     free(sizes);
 }
 
 void mapRange(float *rangearr, float min, float max, int count){
-    for(int i = 0; i < count; i++){
-        rangearr[i] = ((max-min)/count)*i+min;
-        cout << "rangearr[i]: " << rangearr[i] << endl;
+    for(int i = 0; i < count;  i++){
+        rangearr[i] = ((max-min)/count)*(count-i)+min;
+        cout << "rangearr["<<i<<"]: " << rangearr[i] << endl;
     }
+    cout << "\\\\\\\\\n";
 }
 float sqarf32(float in){
     return in*in;
