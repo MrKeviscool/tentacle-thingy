@@ -11,21 +11,20 @@ class circle{
     public:
     sf::CircleShape shape;
     float weight;
-    sf::Vector2f startPos;
+    float maxDistance;
     sf::Vector2f getMid(){
         return(sf::Vector2f(this->shape.getPosition().x + this->shape.getRadius(), this->shape.getPosition().y + this->shape.getRadius()));
     }
     circle(){}
-    circle(float diamiter, float weight, float x, float y) : weight(weight){
+    circle(float diamiter, float weight, float maxDistance, float x, float y) : weight(weight), maxDistance(maxDistance){
         this->shape = sf::CircleShape(diamiter/2);
-        this->startPos = sf::Vector2f(x, y);
-        this->shape.setPosition(startPos);
+        this->shape.setPosition(x, y);
     }
 };
 
 
 void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float wMin, float wMax, float sMin, float sMax, float x, float y), mapRange(float *rangearr, float min, float max, int count);
-float sqarf32(float in);
+float sqar(float in);
 const int FPSRESOLUTION = 4, WIDTH = 1920, HEIGHT = 1080, dx = WIDTH/2, dy = HEIGHT/2;
 const sf::Vector2f aim(0, 0);
 const float force = 100;
@@ -37,7 +36,8 @@ sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "psych balls", sf::Style::
 // circle balls[][5];
 vector<circle> balls;
 int main(){
-    addBalls(5, 0.1, 1, 30, 100, WIDTH/2, HEIGHT/2);
+    addBalls(200, 0.1, 3, 30, 100, WIDTH/2, HEIGHT/2);
+    cout << "test: " << sqrtf32(sqar(3)*sqar(4)) << endl;
     while(window.isOpen()){
         getFPS();
         sf::Event event;
@@ -50,6 +50,12 @@ int main(){
             float rot = -atan2f32(balls[y].getMid().x - sf::Mouse::getPosition(window).x, balls[y].getMid().y - sf::Mouse::getPosition(window).y)*180/M_PIf32; //goes to mouse
             float xmv = sinf32((180 - rot) * (M_PIf32/180)) * force/(balls[y].weight*(float)fps);
             float ymv = cosf32((180 - rot) * (M_PIf32/180)) * force/(balls[y].weight*(float)fps);
+
+            float curdist = sqrtf32(sqar(balls[y].getMid().x + xmv - balls[y-1].getMid().x) + sqar(balls[y].getMid().y + ymv - balls[y-1].getMid().y));
+            if(curdist > balls[y].shape.getRadius()){
+                cout << "curdist: " << curdist << " max dist: " << balls[y].maxDistance << " index: " << y << " curmid: (" <<balls[y].getMid().x << ", " << balls[y].getMid().y << ") original mid: (" << balls[0].getMid().x << ", " << balls[0].getMid().y << ")"<< endl;
+                continue;
+            }
 
             balls[y].shape.move(xmv, ymv);
         }
@@ -101,9 +107,16 @@ void addBalls(int amount, float wMin, float wMax, float sMin, float sMax, float 
     sizes = (float *)malloc(sizeof(float) * amount);
     mapRange(weights, wMin, wMax, amount);
     mapRange(sizes, sMin, sMax, amount);
+    float maxD;
     for(int i = 0; i < amount; i++){
-        balls.push_back(circle(sizes[i], weights[i], WIDTH/2, HEIGHT/2));
-        cout << "ball[" << i <<"] size: " << balls[i].shape.getRadius()/2 << " weight: " << balls[i].weight << endl;
+        if(i == 0){
+            balls.push_back(circle(sizes[i], weights[i], 0, WIDTH/2, HEIGHT/2));
+            cout << "ball[" << 0 <<"] size: " << balls[i].shape.getRadius()/2 << " weight: " << balls[i].weight << " max distance: " << balls[i].maxDistance << endl;
+            continue;
+        }
+        maxD = balls[i-1].maxDistance + sizes[i]/3; 
+        balls.push_back(circle(sizes[i], weights[i], maxD, WIDTH/2, HEIGHT/2));
+        cout << "ball[" << i <<"] size: " << balls[i].shape.getRadius()/2 << " weight: " << balls[i].weight << " max distance: " << balls[i].maxDistance << endl;
     } 
     free(weights);
     free(sizes);
@@ -116,6 +129,6 @@ void mapRange(float *rangearr, float min, float max, int count){
     }
     cout << "\\\\\\\\\n";
 }
-float sqarf32(float in){
+float sqar(float in){
     return in*in;
 }

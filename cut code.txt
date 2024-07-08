@@ -33,3 +33,9 @@ failed checks to keep balls together
             // if(distToNext > balls[y].shape.getRadius()/2){
             //     continue;
             // }
+
+            float curdist = sqrtf32(sqar(balls[y].getMid().x + xmv - balls[0].getMid().x) + sqar(balls[y].getMid().y + ymv - balls[0].getMid().y));
+            if(curdist > balls[y].maxDistance){
+                cout << "curdist: " << curdist << " max dist: " << balls[y].maxDistance << " index: " << y << " curmid: (" <<balls[y].getMid().x << ", " << balls[y].getMid().y << ") original mid: (" << balls[0].getMid().x << ", " << balls[0].getMid().y << ")"<< endl;
+                continue;
+            }
