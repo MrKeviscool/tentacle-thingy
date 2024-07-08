@@ -22,8 +22,7 @@ class circle{
 };
 
 
-void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float weightDefault, float x, float y);
-float *mapRange(float min, float max, int amount);
+void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float weightDefault, float x, float y), mapRange();
 const int FPSRESOLUTION = 4, WIDTH = 1920, HEIGHT = 1080, dx = WIDTH/2, dy = HEIGHT/2;
 const sf::Vector2f aim(0, 0);
 const float force = 100;
@@ -97,18 +96,12 @@ void getFPS(){
 void addBalls(int amount, float wMin, float wMax, float x, float y){
     // float weight = 
     for(int i = 0; i < amount; i++){
-        // float weight = ((wMax-wMin)/amount)*i+wMin;
-        float weight = mapRange(0.1, 1, 3)[i];
-        free(mapRange(0, 0, 0)); //lol
+        float weight = ((wMax-wMin)/amount)*i+wMin;
+        //give mapRange an empty float array;
         balls.push_back(circle(50, weight, WIDTH/2, HEIGHT/2));
     } 
 }
 
-float *mapRange(float min, float max, int amount){ //SO FUCKING SKETCHY 
-    static float *outarr = (float *)malloc(sizeof(float) * amount);
-    for(int i = 0; i < amount; i++){
-        outarr[i] = ((max-min)/amount)*i+min;
-    }
-    return outarr;
-    //REMEMBER TO FREE MALOC
+void mapRange(){
+
 }
