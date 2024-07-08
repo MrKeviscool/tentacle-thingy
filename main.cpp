@@ -31,9 +31,8 @@ const float force = 100;
 
 int fps = -1;
 
-sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "psych balls", sf::Style::Fullscreen);
+sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "tentacle-thing", sf::Style::Fullscreen);
 
-// circle balls[][5];
 vector<circle> balls;
 int main(){
     addBalls(200, 0.1, 3, 30, 100, WIDTH/2, HEIGHT/2);
@@ -43,7 +42,7 @@ int main(){
         sf::Event event;
         processEvent(&event);
 
-        for(int y = 0; y < balls.size(); y++){
+        for(int y = balls.size(); y > 0; y--){
             if(y == 0)
                 continue;
             // float rot = -atan2f32(balls[y].getMid().x - aim.x, balls[y].getMid().y - aim.y)*180/M_PIf32; //goes to a point
@@ -53,7 +52,7 @@ int main(){
 
             float curdist = sqrtf32(sqar(balls[y].getMid().x + xmv - balls[y-1].getMid().x) + sqar(balls[y].getMid().y + ymv - balls[y-1].getMid().y));
             if(curdist > balls[y].shape.getRadius()){
-                cout << "curdist: " << curdist << " max dist: " << balls[y].maxDistance << " index: " << y << " curmid: (" <<balls[y].getMid().x << ", " << balls[y].getMid().y << ") original mid: (" << balls[0].getMid().x << ", " << balls[0].getMid().y << ")"<< endl;
+                // cout << "curdist: " << curdist << " max dist: " << balls[y].maxDistance << " index: " << y << " curmid: (" <<balls[y].getMid().x << ", " << balls[y].getMid().y << ") original mid: (" << balls[0].getMid().x << ", " << balls[0].getMid().y << ")"<< endl;
                 continue;
             }
 
