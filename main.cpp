@@ -22,7 +22,7 @@ class circle{
 };
 
 
-void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float weightDefault, float x, float y), mapRange();
+void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float wMin, float wMax, float x, float y), mapRange(float *rangearr, float min, float max, int count);
 const int FPSRESOLUTION = 4, WIDTH = 1920, HEIGHT = 1080, dx = WIDTH/2, dy = HEIGHT/2;
 const sf::Vector2f aim(0, 0);
 const float force = 100;
@@ -34,9 +34,7 @@ sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "psych balls", sf::Style::
 // circle balls[][5];
 vector<circle> balls;
 int main(){
-    balls.push_back(circle(50, 1, dx, dy));
-    balls.push_back(circle(50, 0.5, dx, dy+50));
-    balls.push_back(circle(50, 0.25, dx, dy+100));
+    addBalls(5, 0.3, 1, WIDTH/2, HEIGHT/2);
     while(window.isOpen()){
         getFPS();
         sf::Event event;
@@ -94,14 +92,18 @@ void getFPS(){
 }
 
 void addBalls(int amount, float wMin, float wMax, float x, float y){
-    // float weight = 
+    static float *weights;
+    weights = (float *)malloc(sizeof(float) * amount);
+    mapRange(weights, 0.1, 1, amount);
     for(int i = 0; i < amount; i++){
-        float weight = ((wMax-wMin)/amount)*i+wMin;
-        //give mapRange an empty float array;
-        balls.push_back(circle(50, weight, WIDTH/2, HEIGHT/2));
+        balls.push_back(circle(50, weights[i], WIDTH/2, HEIGHT/2));
     } 
+    free(weights);
 }
 
-void mapRange(){
-
+void mapRange(float *rangearr, float min, float max, int count){
+    for(int i = 0; i < count; i++){
+        rangearr[i] = ((max-min)/count)*i+min;
+        cout << "rangearr[i]: " << rangearr[i] << endl;
+    }
 }
