@@ -11,18 +11,21 @@ class circle{
     public:
     sf::CircleShape shape;
     float weight;
+    sf::Vector2f startPos;
     sf::Vector2f getMid(){
         return(sf::Vector2f(this->shape.getPosition().x + this->shape.getRadius(), this->shape.getPosition().y + this->shape.getRadius()));
     }
     circle(){}
     circle(float diamiter, float weight, float x, float y) : weight(weight){
         this->shape = sf::CircleShape(diamiter/2);
-        this->shape.setPosition(x, y);
+        this->startPos = sf::Vector2f(x, y);
+        this->shape.setPosition(startPos);
     }
 };
 
 
-void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float wMin, float wMax, float x, float y), mapRange(float *rangearr, float min, float max, int count);
+void display(), processEvent(sf::Event *event), getFPS(), addBalls(int amount, float wMin, float wMax, float sMin, float sMax, float x, float y), mapRange(float *rangearr, float min, float max, int count);
+float sqarf32(float in);
 const int FPSRESOLUTION = 4, WIDTH = 1920, HEIGHT = 1080, dx = WIDTH/2, dy = HEIGHT/2;
 const sf::Vector2f aim(0, 0);
 const float force = 100;
@@ -34,19 +37,20 @@ sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "psych balls", sf::Style::
 // circle balls[][5];
 vector<circle> balls;
 int main(){
-    addBalls(5, 0.3, 1, WIDTH/2, HEIGHT/2);
+    addBalls(500, 0.1, 1, 30, 100, WIDTH/2, HEIGHT/2);
     while(window.isOpen()){
         getFPS();
         sf::Event event;
         processEvent(&event);
 
         for(int y = 0; y < balls.size(); y++){
+            if(y == balls.size()-1)
+                continue;
             // float rot = -atan2f32(balls[y].getMid().x - aim.x, balls[y].getMid().y - aim.y)*180/M_PIf32; //goes to a point
             float rot = -atan2f32(balls[y].getMid().x - sf::Mouse::getPosition(window).x, balls[y].getMid().y - sf::Mouse::getPosition(window).y)*180/M_PIf32; //goes to mouse
             float xmv = sinf32((180 - rot) * (M_PIf32/180)) * force/(balls[y].weight*(float)fps);
             float ymv = cosf32((180 - rot) * (M_PIf32/180)) * force/(balls[y].weight*(float)fps);
 
-            // cout << "index: " << y << " amount to move x: " << xmv << " y: " << ymv << endl;
             balls[y].shape.move(xmv, ymv);
         }
 
@@ -91,14 +95,17 @@ void getFPS(){
     framesdone++;
 }
 
-void addBalls(int amount, float wMin, float wMax, float x, float y){
-    static float *weights;
+void addBalls(int amount, float wMin, float wMax, float sMin, float sMax, float x, float y){
+    static float *weights, *sizes;
     weights = (float *)malloc(sizeof(float) * amount);
-    mapRange(weights, 0.1, 1, amount);
+    sizes = (float *)malloc(sizeof(float) * amount);
+    mapRange(weights, wMin, wMax, amount);
+    mapRange(sizes, sMin, sMax, amount);
     for(int i = 0; i < amount; i++){
-        balls.push_back(circle(50, weights[i], WIDTH/2, HEIGHT/2));
+        balls.push_back(circle(sizes[i], weights[i], WIDTH/2, HEIGHT/2));
     } 
     free(weights);
+    free(sizes);
 }
 
 void mapRange(float *rangearr, float min, float max, int count){
@@ -106,4 +113,7 @@ void mapRange(float *rangearr, float min, float max, int count){
         rangearr[i] = ((max-min)/count)*i+min;
         cout << "rangearr[i]: " << rangearr[i] << endl;
     }
+}
+float sqarf32(float in){
+    return in*in;
 }

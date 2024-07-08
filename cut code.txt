@@ -18,3 +18,18 @@
     // return outarr;
     // REMEMBER TO FREE MALOC
 // }
+
+
+failed checks to keep balls together
+
+            // cout << "index: " << y << " amount to move x: " << xmv << " y: " << ymv << endl;
+            // if(balls[y].getMid().x+xmv > balls[y+1].shape.getPosition().x + balls[y+1].shape.getRadius() || balls[y].getMid().x+xmv < balls[y+1].shape.getPosition().x
+            // || balls[y].getMid().y+ymv > balls[y+1].shape.getPosition().y + balls[y+1].shape.getRadius() || balls[y].getMid().y+ymv < balls[y+1].shape.getPosition().y
+            // ){
+            //     continue;
+            // }
+            
+            // float distToNext = sqrtf32(sqarf32((balls[y].getMid().x+xmv - balls[y+1].getMid().x)) * sqarf32((balls[y].getMid().y+ymv - balls[y+1].getMid().y)));
+            // if(distToNext > balls[y].shape.getRadius()/2){
+            //     continue;
+            // }

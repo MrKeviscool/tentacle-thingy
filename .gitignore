@@ -1,3 +1,4 @@
 *.json
 program
 .vscode
+*.png
