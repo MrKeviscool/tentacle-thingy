@@ -1,0 +1,11 @@
+// float *mapRange(void *inmin, void *inmax, int amount){ //DANGEROUS (LOL) //REMEMBER TO FREE MEMORY
+//     float *outarr = (float *)malloc(sizeof(float) * amount);
+    
+//     float min = *(float *)inmin;
+//     float max = *(float *)inmax;
+//     for(int i = 0; i < amount; i++){
+//         outarr[i] = ((max-min)/amount)*i+min;
+//     }
+//     return outarr;
+//     //REMEMBER TO FREE MALOC
+// }
